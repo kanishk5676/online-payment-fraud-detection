@@ -1,61 +1,502 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Submit Transaction</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet">
-  <style>
-    body {
-      background-color: #121212;
-      color: #00fff2;
-      font-family: 'Orbitron', sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding-top: 50px;
-    }
-    form {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 15px;
-      width: 300px;
-    }
-    input {
-      padding: 12px;
-      border: none;
-      border-radius: 6px;
-      background: #1e1e1e;
-      color: #00fff2;
-      outline: none;
-    }
-    button {
-      background-color: #00fff2;
-      color: #121212;
-      padding: 12px;
-      font-weight: bold;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-    button:hover {
-      background-color: #00bfbf;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transaction Analysis - CyberGuard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a0a2e 50%, #16213e 100%);
+            color: #00f5ff;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .background-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background: radial-gradient(circle at 20% 50%, rgba(0, 245, 255, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(138, 43, 226, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 40% 80%, rgba(0, 255, 127, 0.1) 0%, transparent 50%);
+        }
+
+        /* Geometric Shapes */
+        .geometric-shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.1;
+        }
+
+        .shape {
+            position: absolute;
+            border: 1px solid #00f5ff;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .shape:nth-child(1) {
+            top: 10%;
+            left: 10%;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            animation-delay: 0s;
+        }
+
+        .shape:nth-child(2) {
+            top: 20%;
+            right: 15%;
+            width: 80px;
+            height: 80px;
+            transform: rotate(45deg);
+            animation-delay: 2s;
+        }
+
+        .shape:nth-child(3) {
+            bottom: 20%;
+            left: 20%;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            animation-delay: 4s;
+        }
+
+        .shape:nth-child(4) {
+            bottom: 30%;
+            right: 25%;
+            width: 70px;
+            height: 70px;
+            transform: rotate(45deg);
+            animation-delay: 1s;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 20px 50px;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 245, 255, 0.2);
+            z-index: 1000;
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Orbitron', monospace;
+            font-size: 24px;
+            font-weight: 900;
+            color: #00f5ff;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo i {
+            font-size: 28px;
+            color: #ff6b35;
+        }
+
+        .back-button {
+            color: #00f5ff;
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            border: 1px solid rgba(0, 245, 255, 0.3);
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: rgba(0, 245, 255, 0.1);
+            border-color: #00f5ff;
+        }
+
+        /* Main Container */
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 100px 20px 50px;
+        }
+
+        .form-container {
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(0, 245, 255, 0.3);
+            border-radius: 25px;
+            padding: 50px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .form-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #00f5ff, #ff6b35, #00f5ff, transparent);
+            animation: scan 3s linear infinite;
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .form-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 2.5rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, #00f5ff, #ff6b35);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .form-subtitle {
+            color: #b0b0b0;
+            font-size: 18px;
+            font-weight: 300;
+        }
+
+        /* Form Styling */
+        .transaction-form {
+            display: grid;
+            gap: 25px;
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-label {
+            display: block;
+            margin-bottom: 8px;
+            color: #00f5ff;
+            font-weight: 500;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 15px 20px;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(0, 245, 255, 0.3);
+            border-radius: 10px;
+            color: #00f5ff;
+            font-size: 16px;
+            font-family: 'Rajdhani', sans-serif;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .form-input:focus {
+            border-color: #00f5ff;
+            box-shadow: 0 0 20px rgba(0, 245, 255, 0.3);
+            background: rgba(0, 0, 0, 0.8);
+        }
+
+        .form-input::placeholder {
+            color: #666;
+        }
+
+        /* Input Icons */
+        .input-group i {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #ff6b35;
+            font-size: 18px;
+            margin-top: 12px;
+        }
+
+        /* Submit Button */
+        .submit-button {
+            background: linear-gradient(45deg, #00f5ff, #ff6b35);
+            color: #000;
+            border: none;
+            padding: 18px 40px;
+            border-radius: 50px;
+            font-family: 'Orbitron', monospace;
+            font-weight: 700;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 20px;
+        }
+
+        .submit-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .submit-button:hover::before {
+            left: 100%;
+        }
+
+        .submit-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(0, 245, 255, 0.4);
+        }
+
+        .submit-button:active {
+            transform: translateY(-1px);
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(0, 245, 255, 0.3);
+            border-top: 3px solid #00f5ff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        /* Security Notice */
+        .security-notice {
+            background: rgba(0, 255, 127, 0.1);
+            border: 1px solid rgba(0, 255, 127, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .security-notice i {
+            font-size: 24px;
+            color: #00ff7f;
+        }
+
+        .security-notice-text {
+            color: #b0b0b0;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        /* Animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes scan {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            nav {
+                padding: 15px 20px;
+            }
+            
+            .form-container {
+                padding: 30px 20px;
+                margin: 0 10px;
+            }
+            
+            .form-title {
+                font-size: 2rem;
+            }
+            
+            .container {
+                padding: 80px 10px 30px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .form-title {
+                font-size: 1.8rem;
+            }
+            
+            .form-container {
+                padding: 25px 15px;
+            }
+        }
+    </style>
 </head>
 <body>
-  <h2>Enter Transaction Details</h2>
-  <form action="/predict" method="post">
-    <input type="text" name="feature1" placeholder="Feature 1" required>
-    <input type="text" name="feature2" placeholder="Feature 2" required>
-    <input type="text" name="feature3" placeholder="Feature 3" required>
-    <input type="text" name="feature4" placeholder="Feature 4" required>
-    <input type="text" name="feature5" placeholder="Feature 5" required>
-    <!-- Add or remove input fields based on your model features -->
-    <button type="submit">Check Fraud</button>
-  </form>
+    <div class="background-animation"></div>
+    
+    <div class="geometric-shapes">
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
+
+    <nav>
+        <div class="nav-content">
+            <a href="/" class="logo">
+                <i class="fas fa-shield-alt"></i>
+                CyberGuard
+            </a>
+            <a href="/" class="back-button">
+                <i class="fas fa-arrow-left"></i>
+                Back to Home
+            </a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="form-container">
+            <div class="form-header">
+                <h1 class="form-title">TRANSACTION ANALYSIS</h1>
+                <p class="form-subtitle">Enter transaction details for AI-powered fraud detection</p>
+            </div>
+
+            <form class="transaction-form" action="/predict" method="post" id="transactionForm">
+    <!-- Feature 1: Transaction Amount -->
+    <div class="input-group">
+        <label class="input-label">Transaction Amount ($)</label>
+        <input type="number" step="0.01" name="feature1" class="form-input" placeholder="e.g. 249.99" required>
+        <i class="fas fa-dollar-sign"></i>
+    </div>
+
+    <!-- Feature 2: Transaction Type (encoded) -->
+    <div class="input-group">
+        <label class="input-label">Transaction Type Code</label>
+        <input type="number" step="1" name="feature2" class="form-input" placeholder="e.g. 1 = Online, 2 = POS" required>
+        <i class="fas fa-exchange-alt"></i>
+    </div>
+
+    <!-- Feature 3: Time Gap Since Last Transaction -->
+    <div class="input-group">
+        <label class="input-label">Seconds Since Last Transaction</label>
+        <input type="number" step="1" name="feature3" class="form-input" placeholder="e.g. 3600" required>
+        <i class="fas fa-stopwatch"></i>
+    </div>
+
+    <!-- Feature 4: User Account Age -->
+    <div class="input-group">
+        <label class="input-label">Account Age (Days)</label>
+        <input type="number" step="1" name="feature4" class="form-input" placeholder="e.g. 730" required>
+        <i class="fas fa-user-clock"></i>
+    </div>
+
+    <!-- Feature 5: Failed Login Attempts -->
+    <div class="input-group">
+        <label class="input-label">Failed Login Attempts</label>
+        <input type="number" step="1" name="feature5" class="form-input" placeholder="e.g. 2" required>
+        <i class="fas fa-user-lock"></i>
+    </div>
+
+    <button type="submit" class="submit-button">
+        <i class="fas fa-search"></i>
+        Analyze Transaction
+    </button>
+</form>
+
+
+            <div class="loading" id="loading">
+                <div class="loading-spinner"></div>
+                <p>Analyzing transaction patterns...</p>
+            </div>
+
+            <div class="security-notice">
+                <i class="fas fa-lock"></i>
+                <div class="security-notice-text">
+                    <strong>Your data is secure:</strong> All transaction data is encrypted and processed using advanced AI algorithms. We never store your personal financial information.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Form submission with loading animation
+        document.getElementById('transactionForm').addEventListener('submit', function(e) {
+            const submitButton = document.querySelector('.submit-button');
+            const loading = document.getElementById('loading');
+            
+            // Show loading animation
+            submitButton.style.display = 'none';
+            loading.style.display = 'block';
+            
+            // Add a small delay to show the loading animation
+            setTimeout(() => {
+                // Form will submit normally after this delay
+            }, 500);
+        });
+
+        // Input validation and formatting
+        document.querySelectorAll('.form-input').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.style.transform = 'translateY(-2px)';
+            });
+            
+            input.addEventListener('blur', function() {
+                this.parentElement.style.transform = 'translateY(0px)';
+            });
+        });
+
+        // Floating animation for geometric shapes
+        document.querySelectorAll('.shape').forEach((shape, index) => {
+            shape.style.animationDelay = `${index * 0.5}s`;
+        });
+    </script>
 </body>
 </html>
-
-
-
