@@ -410,39 +410,60 @@
             </div>
 
             <form class="transaction-form" action="/predict" method="post" id="transactionForm">
-    <!-- Feature 1: Transaction Amount -->
+    <!-- Step: Unit of time when transaction occurred -->
     <div class="input-group">
-        <label class="input-label">Transaction Amount ($)</label>
-        <input type="number" step="0.01" name="feature1" class="form-input" placeholder="e.g. 249.99" required>
-        <i class="fas fa-dollar-sign"></i>
+        <label class="input-label">Step (Time Unit)</label>
+        <input type="number" step="1" name="step" class="form-input" placeholder="e.g. 1, 2, 3..." required>
+        <i class="fas fa-clock"></i>
     </div>
 
-    <!-- Feature 2: Transaction Type (encoded) -->
+    <!-- Type: Type of online transaction -->
     <div class="input-group">
-        <label class="input-label">Transaction Type Code</label>
-        <input type="number" step="1" name="feature2" class="form-input" placeholder="e.g. 1 = Online, 2 = POS" required>
+        <label class="input-label">Transaction Type</label>
+        <select name="type" class="form-input" required>
+            <option value="">Select Transaction Type</option>
+            <option value="PAYMENT">PAYMENT</option>
+            <option value="TRANSFER">TRANSFER</option>
+            <option value="CASH_OUT">CASH_OUT</option>
+            <option value="DEBIT">DEBIT</option>
+            <option value="CASH_IN">CASH_IN</option>
+        </select>
         <i class="fas fa-exchange-alt"></i>
     </div>
 
-    <!-- Feature 3: Time Gap Since Last Transaction -->
+    <!-- Amount: Transaction amount -->
     <div class="input-group">
-        <label class="input-label">Seconds Since Last Transaction</label>
-        <input type="number" step="1" name="feature3" class="form-input" placeholder="e.g. 3600" required>
-        <i class="fas fa-stopwatch"></i>
+        <label class="input-label">Amount ($)</label>
+        <input type="number" step="0.01" name="amount" class="form-input" placeholder="e.g. 249.99" required>
+        <i class="fas fa-dollar-sign"></i>
     </div>
 
-    <!-- Feature 4: User Account Age -->
+    <!-- OldbalanceOrg: Initial balance before transaction -->
     <div class="input-group">
-        <label class="input-label">Account Age (Days)</label>
-        <input type="number" step="1" name="feature4" class="form-input" placeholder="e.g. 730" required>
-        <i class="fas fa-user-clock"></i>
+        <label class="input-label">Old Balance Origin ($)</label>
+        <input type="number" step="0.01" name="oldbalanceOrg" class="form-input" placeholder="e.g. 1000.00" required>
+        <i class="fas fa-wallet"></i>
     </div>
 
-    <!-- Feature 5: Failed Login Attempts -->
+    <!-- NewbalanceOrig: New balance after transaction -->
     <div class="input-group">
-        <label class="input-label">Failed Login Attempts</label>
-        <input type="number" step="1" name="feature5" class="form-input" placeholder="e.g. 2" required>
-        <i class="fas fa-user-lock"></i>
+        <label class="input-label">New Balance Origin ($)</label>
+        <input type="number" step="0.01" name="newbalanceOrig" class="form-input" placeholder="e.g. 750.01" required>
+        <i class="fas fa-credit-card"></i>
+    </div>
+
+    <!-- OldbalanceDest: Initial balance of recipient before transaction -->
+    <div class="input-group">
+        <label class="input-label">Old Balance Destination ($)</label>
+        <input type="number" step="0.01" name="oldbalanceDest" class="form-input" placeholder="e.g. 500.00" required>
+        <i class="fas fa-piggy-bank"></i>
+    </div>
+
+    <!-- NewbalanceDest: New balance of recipient after transaction -->
+    <div class="input-group">
+        <label class="input-label">New Balance Destination ($)</label>
+        <input type="number" step="0.01" name="newbalanceDest" class="form-input" placeholder="e.g. 749.99" required>
+        <i class="fas fa-coins"></i>
     </div>
 
     <button type="submit" class="submit-button">
@@ -450,7 +471,6 @@
         Analyze Transaction
     </button>
 </form>
-
 
             <div class="loading" id="loading">
                 <div class="loading-spinner"></div>
